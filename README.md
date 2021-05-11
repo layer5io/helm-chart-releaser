@@ -1,5 +1,5 @@
-# layer5-repo-template
-This repository is used as the boilerplate for consistency across all Layer5 repos.
+# Helm Chart Releaser
+This repository is used for building a Github Action for releasing Helm charts that belong to Layer5.
 
 <div>&nbsp;</div>
 
