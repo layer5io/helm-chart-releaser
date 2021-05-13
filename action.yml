@@ -1,0 +1,67 @@
+name: "Helm Chart Releaser For Remote"
+description: "Host a Helm charts repo on GitHub repo"
+author: "aisuko"
+branding:
+  color: blue
+  icon: anchor
+inputs:
+  version:
+    description: "The chart-releaser version to use"
+  config:
+    description: "The relative path to the chart-releaser config file"
+  charts_dir:
+    description: The charts directory
+    default: charts
+  charts_repo_url:
+    description: "The GitHub Pages URL to the charts repo (default: https://<owner>.github.io/<repo>)"
+  pages_branch:
+    description: The branch of chart's repo
+  activity:
+    description: activity (pr, push and none)
+    default: none
+  owner:
+    description: The repo owner
+  repo:
+    description: The chart repo
+runs:
+  using: composite
+  steps:
+    - run: |
+        if [[ -n "${{ inputs.owner }}" ]]; then
+            args=(--owner "${{ inputs.owner }}")
+        else
+            owner=$(cut -d '/' -f 1 <<< "$GITHUB_REPOSITORY")
+            args=(--owner "$owner")
+        fi
+
+        if [[ -n "${{ inputs.repo }}" ]]; then
+            args+=(--repo "${{ inputs.repo }}")
+        else
+            repo=$(cut -d '/' -f 2 <<< "$GITHUB_REPOSITORY")
+            args+=(--repo "$repo")
+        fi
+
+        args+=(--charts-dir "${{ inputs.charts_dir }}")
+
+        if [[ -n "${{ inputs.version }}" ]]; then
+            args+=(--version "${{ inputs.version }}")
+        fi
+
+        if [[ -n "${{ inputs.config }}" ]]; then
+            args+=(--config "${{ inputs.config }}")
+        fi
+
+        if [[ -n "${{ inputs.charts_repo_url }}" ]]; then
+            args+=(--charts-repo-url "${{ inputs.charts_repo_url }}")
+        fi
+
+        if [[ -n "${{ inputs.pages_branch }}" ]]; then
+            args+=(--pages-branch "${{inputs.pages_branch}}")
+        fi
+
+        if [[ -n "${{ inputs.activity }}" ]]; then
+            args+=(--activity "${{inputs.activity}}")
+        fi
+
+        "$GITHUB_ACTION_PATH/cr.sh" "${args[@]}"
+      shell: bash
