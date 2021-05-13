@@ -1,8 +1,8 @@
-name: "Helm Chart Releaser For Remote"
+name: "Helm Chart Releaser For Remote Repo"
 description: "Host a Helm charts repo on GitHub repo"
-author: "aisuko"
+author: "Layer5"
 branding:
-  color: blue
+  color: green
   icon: anchor
 inputs:
   version:
